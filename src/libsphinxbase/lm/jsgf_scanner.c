@@ -1,3 +1,5 @@
+
+
 #line 2 "jsgf_scanner.c"
 
 #line 4 "jsgf_scanner.c"

@@ -205,7 +205,7 @@ ps_reinit(ps_decoder_t *ps, cmd_ln_t *config)
     err_set_debug_level(cmd_ln_int32_r(ps->config, "-debug"));
     ps->mfclogdir = cmd_ln_str_r(ps->config, "-mfclogdir");
     ps->rawlogdir = cmd_ln_str_r(ps->config, "-rawlogdir");
-    ps->senlogdir = cmd_ln_str_r(ps->config, "-senlogdir");
+//    ps->senlogdir = cmd_ln_str_r(ps->config, "-senlogdir");
 
     /* Fill in some default arguments. */
     ps_init_defaults(ps);
@@ -228,9 +228,12 @@ ps_reinit(ps_decoder_t *ps, cmd_ln_t *config)
             (float64)cmd_ln_float32_r(ps->config, "-logbase"))) {
         if (ps->lmath)
             logmath_free(ps->lmath);
-        ps->lmath = logmath_init
-            ((float64)cmd_ln_float32_r(ps->config, "-logbase"), 0,
-             cmd_ln_boolean_r(ps->config, "-bestpath"));
+
+        // DEBUG
+        int bp = cmd_ln_boolean_r(ps->config, "-bestpath");
+        double lb = (float64)cmd_ln_float32_r(ps->config, "-logbase");
+
+        ps->lmath = logmath_init(lb, 0,bp);
     }
 
     /* Acoustic model (this is basically everything that
@@ -257,18 +260,20 @@ ps_reinit(ps_decoder_t *ps, cmd_ln_t *config)
         return -1;
 
     /* Determine whether we are starting out in FSG or N-Gram search mode. */
-    if (cmd_ln_str_r(ps->config, "-fsg") || cmd_ln_str_r(ps->config, "-jsgf")) {
-        ps_search_t *fsgs;
+//    if (cmd_ln_str_r(ps->config, "-fsg") || cmd_ln_str_r(ps->config, "-jsgf")) {
+//        ps_search_t *fsgs;
+//
+//        if ((ps->d2p = dict2pid_build(ps->acmod->mdef, ps->dict)) == NULL)
+//            return -1;
+//        if ((fsgs = fsg_search_init(ps->config, ps->acmod, ps->dict, ps->d2p)) == NULL)
+//            return -1;
+//        fsgs->pls = ps->phone_loop;
+//        ps->searches = glist_add_ptr(ps->searches, fsgs);
+//        ps->search = fsgs;
+//    }
+//    else
 
-        if ((ps->d2p = dict2pid_build(ps->acmod->mdef, ps->dict)) == NULL)
-            return -1;
-        if ((fsgs = fsg_search_init(ps->config, ps->acmod, ps->dict, ps->d2p)) == NULL)
-            return -1;
-        fsgs->pls = ps->phone_loop;
-        ps->searches = glist_add_ptr(ps->searches, fsgs);
-        ps->search = fsgs;
-    }
-    else if ((lmfile = cmd_ln_str_r(ps->config, "-lm"))
+    	if ((lmfile = cmd_ln_str_r(ps->config, "-lm"))
              || (lmctl = cmd_ln_str_r(ps->config, "-lmctl"))) {
         ps_search_t *ngs;
 
@@ -419,37 +424,37 @@ ps_update_lmset(ps_decoder_t *ps, ngram_model_t *lmset)
     return ngs->lmset;
 }
 
-fsg_set_t *
-ps_get_fsgset(ps_decoder_t *ps)
-{
-    if (ps->search == NULL
-        || 0 != strcmp(ps_search_name(ps->search), "fsg"))
-        return NULL;
-    return (fsg_set_t *)ps->search;
-}
+//fsg_set_t *
+//ps_get_fsgset(ps_decoder_t *ps)
+//{
+//    if (ps->search == NULL
+//        || 0 != strcmp(ps_search_name(ps->search), "fsg"))
+//        return NULL;
+//    return (fsg_set_t *)ps->search;
+//}
 
-fsg_set_t *
-ps_update_fsgset(ps_decoder_t *ps)
-{
-    ps_search_t *search;
-
-    /* Look for FSG search. */
-    search = ps_find_search(ps, "fsg");
-    if (search == NULL) {
-        /* Initialize FSG search. */
-        search = fsg_search_init(ps->config,
-                                 ps->acmod, ps->dict, ps->d2p);
-        search->pls = ps->phone_loop;
-        ps->searches = glist_add_ptr(ps->searches, search);
-    }
-    else {
-        /* Tell FSG search to update its view of the world. */
-        if (ps_search_reinit(search, ps->dict, ps->d2p) < 0)
-            return NULL;
-    }
-    ps->search = search;
-    return (fsg_set_t *)search;
-}
+//fsg_set_t *
+//ps_update_fsgset(ps_decoder_t *ps)
+//{
+//    ps_search_t *search;
+//
+//    /* Look for FSG search. */
+//    search = ps_find_search(ps, "fsg");
+//    if (search == NULL) {
+//        /* Initialize FSG search. */
+//        search = fsg_search_init(ps->config,
+//                                 ps->acmod, ps->dict, ps->d2p);
+//        search->pls = ps->phone_loop;
+//        ps->searches = glist_add_ptr(ps->searches, search);
+//    }
+//    else {
+//        /* Tell FSG search to update its view of the world. */
+//        if (ps_search_reinit(search, ps->dict, ps->d2p) < 0)
+//            return NULL;
+//    }
+//    ps->search = search;
+//    return (fsg_set_t *)search;
+//}
 
 int
 ps_load_dict(ps_decoder_t *ps, char const *dictfile,
@@ -579,6 +584,7 @@ ps_decode_raw(ps_decoder_t *ps, FILE *rawfh,
               char const *uttid, long maxsamps)
 {
     long total, pos;
+    int i;
 
     ps_start_utt(ps, uttid);
     /* If this file is seekable or maxsamps is specified, then decode
@@ -595,6 +601,16 @@ ps_decode_raw(ps_decoder_t *ps, FILE *rawfh,
         }
         data = ckd_calloc(maxsamps, sizeof(*data));
         total = fread(data, sizeof(*data), maxsamps, rawfh);
+
+        // byte swap data if needed
+        #define BYTE_SWAP 1
+        #ifdef	BYTE_SWAP
+        #define SWAP_INT16(x)	*(x) = ((0x00ff & (*(x))>>8) | (0xff00 & (*(x))<<8))
+                for (i=0;i<total;i++) {
+                	SWAP_INT16(&data[i]);
+                }
+        #endif
+
         ps_process_raw(ps, data, total, FALSE, TRUE);
         ckd_free(data);
     }

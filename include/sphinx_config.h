@@ -32,7 +32,7 @@
 /* #undef FIXED16 */
 
 /* Use fixed-point computation */
-#define FIXED_POINT
+//#define FIXED_POINT
 
 /* The size of `long', as computed by sizeof. */
 #define SIZEOF_LONG 4
@@ -45,3 +45,6 @@
 
 /* Enable debugging output */
 /* #undef SPHINX_DEBUG */
+
+// use mfs file system
+#include <mfs.h>

@@ -34,6 +34,9 @@
  * ====================================================================
  *
  */
+#ifndef _NO_MFS
+#define _NO_MFS 1
+#endif
 
 #include <string.h>
 #include <assert.h>

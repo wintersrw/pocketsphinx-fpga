@@ -323,6 +323,21 @@ bin_mdef_read(cmd_ln_t *config, const char *filename)
     int32 *sseq_size;
     int do_mmap;
 
+    // BEGIN DEBUG CODE
+//        char *p;
+//        char **stk = &p;
+//        for (i=0;i<100;i++) {
+//    		p = ckd_calloc(64,640);
+//
+//    		if (!p) {
+//    			puts("calloc failed");
+//    			return 0;
+//    		} else {
+//    			printf("address: %X\n", p);
+//    		}
+//        }
+    // END DEBUG CODE
+
     /* Try to read it as text first. */
     if ((m = bin_mdef_read_text(config, filename)) != NULL)
         return m;
@@ -448,6 +463,20 @@ bin_mdef_read(cmd_ln_t *config, const char *filename)
     sseq_size = (int32 *) (m->phone + m->n_phone);
     if (swap)
         SWAP_INT32(sseq_size);
+//// BEGIN DEBUG CODE
+//    char *p;
+//    char **stk = &p;
+//    for (i=0;i<1000;i++) {
+//		p = calloc(64,2);
+//
+//		if (!p) {
+//			puts("calloc failed");
+//			return 0;
+//		} else {
+//			printf("address: %X\n", p);
+//		}
+//    }
+//// END DEBUG CODE
     m->sseq = ckd_calloc(m->n_sseq, sizeof(*m->sseq));
     m->sseq[0] = (uint16 *) (sseq_size + 1);
     if (swap) {

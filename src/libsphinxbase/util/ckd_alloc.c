@@ -140,6 +140,8 @@ ckd_fail(char *format, ...)
         exit(-1);
 }
 
+static int count=0;
+
 void *
 __ckd_calloc__(size_t n_elem, size_t elem_size,
                const char *caller_file, int caller_line)
@@ -155,8 +157,11 @@ __ckd_calloc__(size_t n_elem, size_t elem_size,
     	}
 #else
     if ((mem = calloc(n_elem, elem_size)) == NULL) {
-        ckd_fail("calloc(%d,%d) failed from %s(%d)\n", n_elem,
-                elem_size, caller_file, caller_line);
+        ckd_fail("calloc(%d,%d) failed from %s(%d), called %d times\n", n_elem,
+                elem_size, caller_file, caller_line, count);
+	} else {
+		count++;
+//		printf("--%X--\n",mem);
 	}
 #endif
     	

@@ -140,6 +140,7 @@
 #define FEAT_VERSION	"1.0"
 #define FEAT_DCEP_WIN		2
 
+//#define DUMP_FEATURES
 #ifdef DUMP_FEATURES
 static void
 cep_dump_dbg(feat_t *fcb, mfcc_t **mfc, int32 nfr, const char *text)
