@@ -271,64 +271,64 @@ error_out:
 int32
 logmath_write(logmath_t *lmath, const char *file_name)
 {
-    FILE *fp;
-    long pos;
-    uint32 chksum;
-
-    if (lmath->t.table == NULL) {
-        E_ERROR("No log table to write!\n");
-        return -1;
-    }
-
-    E_INFO("Writing log table file '%s'\n", file_name);
-    if ((fp = fopen(file_name, "wb")) == NULL) {
-        E_ERROR("Failed to open logtable file '%s' for writing: %s\n", file_name, strerror(errno));
-        return -1;
-    }
-
-    /* For whatever reason, we have to do this manually at the
-     * moment. */
-    fprintf(fp, "s3\nversion 1.0\nchksum0 yes\n");
-    fprintf(fp, "width %d\n", lmath->t.width);
-    fprintf(fp, "shift %d\n", lmath->t.shift);
-    fprintf(fp, "logbase %f\n", lmath->base);
-    /* Pad it out to ensure alignment. */
-    pos = ftell(fp) + strlen("endhdr\n");
-    if (pos & ((long)lmath->t.width - 1)) {
-        size_t align = lmath->t.width - (pos & ((long)lmath->t.width - 1));
-        assert(lmath->t.width <= 8);
-        fwrite("        " /* 8 spaces */, 1, align, fp);
-    }
-    fprintf(fp, "endhdr\n");
-
-    /* Now write the binary data. */
-    chksum = (uint32)BYTE_ORDER_MAGIC;
-    fwrite(&chksum, sizeof(uint32), 1, fp);
-    chksum = 0;
-    /* #Values to follow */
-    if (bio_fwrite(&lmath->t.table_size, sizeof(uint32),
-                   1, fp, 0, &chksum) != 1) {
-        E_ERROR("fwrite(%s) (total #values) failed\n", file_name);
-        goto error_out;
-    }
-
-    if (bio_fwrite(lmath->t.table, lmath->t.width, lmath->t.table_size,
-                   fp, 0, &chksum) != lmath->t.table_size) {
-        E_ERROR("fwrite(%s) (%d x %d bytes) failed\n",
-                file_name, lmath->t.table_size, lmath->t.width);
-        goto error_out;
-    }
-    if (bio_fwrite(&chksum, sizeof(uint32), 1, fp, 0, NULL) != 1) {
-        E_ERROR("fwrite(%s) checksum failed\n", file_name);
-        goto error_out;
-    }
-
-    fclose(fp);
-    return 0;
-
-error_out:
-    fclose(fp);
-    return -1;
+//    FILE *fp;
+//    long pos;
+//    uint32 chksum;
+//
+//    if (lmath->t.table == NULL) {
+//        E_ERROR("No log table to write!\n");
+//        return -1;
+//    }
+//
+//    E_INFO("Writing log table file '%s'\n", file_name);
+//    if ((fp = fopen(file_name, "wb")) == NULL) {
+//        E_ERROR("Failed to open logtable file '%s' for writing: %s\n", file_name, strerror(errno));
+//        return -1;
+//    }
+//
+//    /* For whatever reason, we have to do this manually at the
+//     * moment. */
+//    fprintf(fp, "s3\nversion 1.0\nchksum0 yes\n");
+//    fprintf(fp, "width %d\n", lmath->t.width);
+//    fprintf(fp, "shift %d\n", lmath->t.shift);
+//    fprintf(fp, "logbase %f\n", lmath->base);
+//    /* Pad it out to ensure alignment. */
+//    pos = ftell(fp) + strlen("endhdr\n");
+//    if (pos & ((long)lmath->t.width - 1)) {
+//        size_t align = lmath->t.width - (pos & ((long)lmath->t.width - 1));
+//        assert(lmath->t.width <= 8);
+//        fwrite("        " /* 8 spaces */, 1, align, fp);
+//    }
+//    fprintf(fp, "endhdr\n");
+//
+//    /* Now write the binary data. */
+//    chksum = (uint32)BYTE_ORDER_MAGIC;
+//    fwrite(&chksum, sizeof(uint32), 1, fp);
+//    chksum = 0;
+//    /* #Values to follow */
+//    if (bio_fwrite(&lmath->t.table_size, sizeof(uint32),
+//                   1, fp, 0, &chksum) != 1) {
+//        E_ERROR("fwrite(%s) (total #values) failed\n", file_name);
+//        goto error_out;
+//    }
+//
+//    if (bio_fwrite(lmath->t.table, lmath->t.width, lmath->t.table_size,
+//                   fp, 0, &chksum) != lmath->t.table_size) {
+//        E_ERROR("fwrite(%s) (%d x %d bytes) failed\n",
+//                file_name, lmath->t.table_size, lmath->t.width);
+//        goto error_out;
+//    }
+//    if (bio_fwrite(&chksum, sizeof(uint32), 1, fp, 0, NULL) != 1) {
+//        E_ERROR("fwrite(%s) checksum failed\n", file_name);
+//        goto error_out;
+//    }
+//
+//    fclose(fp);
+//    return 0;
+//
+//error_out:
+//    fclose(fp);
+//    return -1;
 }
 
 logmath_t *

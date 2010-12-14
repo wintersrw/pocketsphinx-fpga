@@ -23,10 +23,10 @@
 //#define ENABLE_THREADS /**/
 
 /* Use Q15 fixed-point computation */
-/* #undef FIXED16 */
+//#define FIXED16
 
 /* Use fixed-point computation */
-//#define FIXED_POINT
+#define FIXED_POINT
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
 //#define HAVE_DLFCN_H 1
@@ -68,10 +68,10 @@
 //#define HAVE_PTHREAD_H 1
 
 /* Define to 1 if you have the <sndfile.h> header file. */
-#define HAVE_SNDFILE_H 1
+//#define HAVE_SNDFILE_H 1
 
 /* Define to 1 if you have the `snprintf' function. */
-#define HAVE_SNPRINTF 1
+//#define HAVE_SNPRINTF 1
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #define HAVE_STDINT_H 1
@@ -80,7 +80,7 @@
 #define HAVE_STDLIB_H 1
 
 /* Define to 1 if you have the <strings.h> header file. */
-#define HAVE_STRINGS_H 1
+//#define HAVE_STRINGS_H 1
 
 /* Define to 1 if you have the <string.h> header file. */
 #define HAVE_STRING_H 1
@@ -108,10 +108,11 @@
 #define SIZEOF_LONG 4
 
 /* The size of `long long', as computed by sizeof. */
-#define SIZEOF_LONG_LONG 4
+#define SIZEOF_LONG_LONG 8
 
 /* Enable debugging output */
 /* #undef SPHINX_DEBUG */
+#define SPHINX_DEBUG
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
@@ -128,6 +129,7 @@
 #else
 # ifndef WORDS_BIGENDIAN
 /* #  undef WORDS_BIGENDIAN */
+#	define WORDS_BIGENDIAN 1
 # endif
 #endif
 

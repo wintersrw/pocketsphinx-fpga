@@ -28,7 +28,9 @@ int decode()
                  "-debug", "1",
                  "-verbose", "1",
 			     "-bestpath", "0",
-
+			     "-input_endian", "little",
+			     "-samprate", "16000",
+//			     "-logspec", "1",
 			     NULL);
 	if (config == NULL)
 		return 1;
@@ -97,7 +99,7 @@ int main()
     print("Running ps_hello...\n\r");
 
     xps_mfs_init();
-
+//    printf("%d\n",sizeof(long long));
 //    if (file_exists("/model/hmm/en_US/hub4wsj_sc_8k/feat.params"))
 //    	puts("file exists");
 //    else

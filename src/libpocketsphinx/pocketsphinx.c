@@ -603,7 +603,7 @@ ps_decode_raw(ps_decoder_t *ps, FILE *rawfh,
         total = fread(data, sizeof(*data), maxsamps, rawfh);
 
         // byte swap data if needed
-        #define BYTE_SWAP 1
+//        #define BYTE_SWAP 1
         #ifdef	BYTE_SWAP
         #define SWAP_INT16(x)	*(x) = ((0x00ff & (*(x))>>8) | (0xff00 & (*(x))<<8))
                 for (i=0;i<total;i++) {

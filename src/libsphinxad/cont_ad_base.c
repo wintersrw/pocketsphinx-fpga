@@ -230,23 +230,23 @@
 void
 cont_ad_powhist_dump(FILE * fp, cont_ad_t * r)
 {
-    int32 i, j;
-
-    fprintf(fp, "PowHist:\n");
-    for (i = 0, j = 0; i < CONT_AD_POWHISTSIZE; i++) {
-        if (r->pow_hist[i] > 0) {
-            fprintf(fp, "\t%3d %6d\n", i, r->pow_hist[i]);
-            j = i;
-        }
-    }
-
-    fprintf(fp, "PH[%7.2f]:",
-            (double) (r->tot_frm * r->spf) / (double) (r->sps));
-    for (i = 0; i <= j; i++)
-        fprintf(fp, " %2d", r->pow_hist[i]);
-    fprintf(fp, "\n");
-
-    fflush(fp);
+//    int32 i, j;
+//
+//    fprintf(fp, "PowHist:\n");
+//    for (i = 0, j = 0; i < CONT_AD_POWHISTSIZE; i++) {
+//        if (r->pow_hist[i] > 0) {
+//            fprintf(fp, "\t%3d %6d\n", i, r->pow_hist[i]);
+//            j = i;
+//        }
+//    }
+//
+//    fprintf(fp, "PH[%7.2f]:",
+//            (double) (r->tot_frm * r->spf) / (double) (r->sps));
+//    for (i = 0; i <= j; i++)
+//        fprintf(fp, " %2d", r->pow_hist[i]);
+//    fprintf(fp, "\n");
+//
+//    fflush(fp);
 }
 
 
@@ -621,33 +621,33 @@ get_audio_data(cont_ad_t * r, int16 * buf, int32 max)
 static void
 cont_ad_read_log(cont_ad_t * r, int32 retval)
 {
-    spseg_t *seg;
-
-    fprintf(r->logfp, "return from cont_ad_read() -> %d:\n", retval);
-    fprintf(r->logfp, "\tstate: %d\n", r->state);
-    fprintf(r->logfp, "\tread_ts: %d (%.2fs)\n",
-            r->read_ts, (float32) r->read_ts / (float32) r->sps);
-    fprintf(r->logfp, "\tseglen: %d (%.2fs)\n",
-            r->seglen, (float32) r->seglen / (float32) r->sps);
-    fprintf(r->logfp, "\tsiglvl: %d\n", r->siglvl);
-    fprintf(r->logfp, "\theadfrm: %d\n", r->headfrm);
-    fprintf(r->logfp, "\tn_frm: %d\n", r->n_frm);
-    fprintf(r->logfp, "\tn_sample: %d\n", r->n_sample);
-    fprintf(r->logfp, "\twin_startfrm: %d\n", r->win_startfrm);
-    fprintf(r->logfp, "\twin_validfrm: %d\n", r->win_validfrm);
-    fprintf(r->logfp, "\tnoise_level: %d\n", r->noise_level);
-    fprintf(r->logfp, "\tthresh_sil: %d\n", r->thresh_sil);
-    fprintf(r->logfp, "\tthresh_speech: %d\n", r->thresh_speech);
-    fprintf(r->logfp, "\tn_other: %d\n", r->n_other);
-    fprintf(r->logfp, "\ttail_state: %d\n", r->tail_state);
-    fprintf(r->logfp, "\ttot_frm: %d\n", r->tot_frm);
-
-    fprintf(r->logfp, "\tspseg:");
-    for (seg = r->spseg_head; seg; seg = seg->next)
-        fprintf(r->logfp, " %d[%d]", seg->startfrm, seg->nfrm);
-    fprintf(r->logfp, "\n");
-
-    fflush(r->logfp);
+//    spseg_t *seg;
+//
+//    fprintf(r->logfp, "return from cont_ad_read() -> %d:\n", retval);
+//    fprintf(r->logfp, "\tstate: %d\n", r->state);
+//    fprintf(r->logfp, "\tread_ts: %d (%.2fs)\n",
+//            r->read_ts, (float32) r->read_ts / (float32) r->sps);
+//    fprintf(r->logfp, "\tseglen: %d (%.2fs)\n",
+//            r->seglen, (float32) r->seglen / (float32) r->sps);
+//    fprintf(r->logfp, "\tsiglvl: %d\n", r->siglvl);
+//    fprintf(r->logfp, "\theadfrm: %d\n", r->headfrm);
+//    fprintf(r->logfp, "\tn_frm: %d\n", r->n_frm);
+//    fprintf(r->logfp, "\tn_sample: %d\n", r->n_sample);
+//    fprintf(r->logfp, "\twin_startfrm: %d\n", r->win_startfrm);
+//    fprintf(r->logfp, "\twin_validfrm: %d\n", r->win_validfrm);
+//    fprintf(r->logfp, "\tnoise_level: %d\n", r->noise_level);
+//    fprintf(r->logfp, "\tthresh_sil: %d\n", r->thresh_sil);
+//    fprintf(r->logfp, "\tthresh_speech: %d\n", r->thresh_speech);
+//    fprintf(r->logfp, "\tn_other: %d\n", r->n_other);
+//    fprintf(r->logfp, "\ttail_state: %d\n", r->tail_state);
+//    fprintf(r->logfp, "\ttot_frm: %d\n", r->tot_frm);
+//
+//    fprintf(r->logfp, "\tspseg:");
+//    for (seg = r->spseg_head; seg; seg = seg->next)
+//        fprintf(r->logfp, " %d[%d]", seg->startfrm, seg->nfrm);
+//    fprintf(r->logfp, "\n");
+//
+//    fflush(r->logfp);
 }
 
 

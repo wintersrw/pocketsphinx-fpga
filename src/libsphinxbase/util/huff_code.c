@@ -367,42 +367,42 @@ error_out:
 int
 huff_code_write(huff_code_t *hc, FILE *outfh)
 {
-    int i, j;
-
-    /* Maximum codeword length */
-    fputc(hc->maxbits, outfh);
-    /* Symbol type */
-    fputc(hc->type, outfh);
-    /* Two extra bytes (for future use and alignment) */
-    fputc(0, outfh);
-    fputc(0, outfh);
-    /* For each codeword length: */
-    for (i = 1; i <= hc->maxbits; ++i) {
-        uint32 val;
-
-        /* Starting code, number of codes. */
-        val = hc->firstcode[i];
-        /* Canonically big-endian (like the data itself) */
-        SWAP_BE_32(&val);
-        fwrite(&val, 4, 1, outfh);
-        val = hc->numl[i];
-        SWAP_BE_32(&val);
-        fwrite(&val, 4, 1, outfh);
-
-        /* Symbols for each code (FIXME: Should compress these too) */
-        for (j = 0; j < hc->numl[i]; ++j) {
-            if (hc->type == HUFF_CODE_INT) {
-                int32 val = hc->syms[i][j].r.ival;
-                SWAP_BE_32(&val);
-                fwrite(&val, 4, 1, outfh);
-            }
-            else {
-                /* Write them all separated by newlines, so that
-                 * fgets() will read them for us. */
-                fprintf(outfh, "%s\n", hc->syms[i][j].r.sval);
-            }
-        }
-    }
+//    int i, j;
+//
+//    /* Maximum codeword length */
+//    fputc(hc->maxbits, outfh);
+//    /* Symbol type */
+//    fputc(hc->type, outfh);
+//    /* Two extra bytes (for future use and alignment) */
+//    fputc(0, outfh);
+//    fputc(0, outfh);
+//    /* For each codeword length: */
+//    for (i = 1; i <= hc->maxbits; ++i) {
+//        uint32 val;
+//
+//        /* Starting code, number of codes. */
+//        val = hc->firstcode[i];
+//        /* Canonically big-endian (like the data itself) */
+//        SWAP_BE_32(&val);
+//        fwrite(&val, 4, 1, outfh);
+//        val = hc->numl[i];
+//        SWAP_BE_32(&val);
+//        fwrite(&val, 4, 1, outfh);
+//
+//        /* Symbols for each code (FIXME: Should compress these too) */
+//        for (j = 0; j < hc->numl[i]; ++j) {
+//            if (hc->type == HUFF_CODE_INT) {
+//                int32 val = hc->syms[i][j].r.ival;
+//                SWAP_BE_32(&val);
+//                fwrite(&val, 4, 1, outfh);
+//            }
+//            else {
+//                /* Write them all separated by newlines, so that
+//                 * fgets() will read them for us. */
+//                fprintf(outfh, "%s\n", hc->syms[i][j].r.sval);
+//            }
+//        }
+//    }
     return 0;
 }
 
@@ -419,24 +419,24 @@ huff_code_dump_codebits(FILE *dumpfh, uint32 nbits, uint32 codeword)
 int
 huff_code_dump(huff_code_t *hc, FILE *dumpfh)
 {
-    int i, j;
-
-    /* Print out all codewords. */
-    fprintf(dumpfh, "Maximum codeword length: %d\n", hc->maxbits);
-    fprintf(dumpfh, "Symbols are %s\n", (hc->type == HUFF_CODE_STR) ? "strings" : "ints");
-    fprintf(dumpfh, "Codewords:\n");
-    for (i = 1; i <= hc->maxbits; ++i) {
-        for (j = 0; j < hc->numl[i]; ++j) {
-            if (hc->type == HUFF_CODE_STR)
-                fprintf(dumpfh, "%-30s", hc->syms[i][j].r.sval);
-            else
-                fprintf(dumpfh, "%-30d", hc->syms[i][j].r.ival);
-            huff_code_dump_codebits(dumpfh, hc->syms[i][j].nbits,
-                                    hc->syms[i][j].codeword);
-            fprintf(dumpfh, "\n");
-        }
-    }
-    return 0;
+//    int i, j;
+//
+//    /* Print out all codewords. */
+//    fprintf(dumpfh, "Maximum codeword length: %d\n", hc->maxbits);
+//    fprintf(dumpfh, "Symbols are %s\n", (hc->type == HUFF_CODE_STR) ? "strings" : "ints");
+//    fprintf(dumpfh, "Codewords:\n");
+//    for (i = 1; i <= hc->maxbits; ++i) {
+//        for (j = 0; j < hc->numl[i]; ++j) {
+//            if (hc->type == HUFF_CODE_STR)
+//                fprintf(dumpfh, "%-30s", hc->syms[i][j].r.sval);
+//            else
+//                fprintf(dumpfh, "%-30d", hc->syms[i][j].r.ival);
+//            huff_code_dump_codebits(dumpfh, hc->syms[i][j].nbits,
+//                                    hc->syms[i][j].codeword);
+//            fprintf(dumpfh, "\n");
+//        }
+//    }
+//    return 0;
 }
 
 huff_code_t *

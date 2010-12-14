@@ -232,8 +232,10 @@ tmat_init(char const *file_name, logmath_t *lmath, float64 tpfloor, int32 brepor
 
     chksum = 0;
 
+    int32 n_tmat_32;
+
     /* Read #tmat, #from-states, #to-states, arraysize */
-    if ((bio_fread(&(t->n_tmat), sizeof(int32), 1, fp, byteswap, &chksum)
+    if ((bio_fread(&(n_tmat_32), sizeof(int32), 1, fp, byteswap, &chksum)
          != 1)
         || (bio_fread(&n_src, sizeof(int32), 1, fp, byteswap, &chksum) !=
             1)
@@ -242,6 +244,8 @@ tmat_init(char const *file_name, logmath_t *lmath, float64 tpfloor, int32 brepor
         || (bio_fread(&i, sizeof(int32), 1, fp, byteswap, &chksum) != 1)) {
         E_FATAL("bio_fread(%s) (arraysize) failed\n", file_name);
     }
+    t->n_tmat = (int16)n_tmat_32;
+
     if (t->n_tmat >= MAX_INT16) /* Comparison is always false... */
         E_FATAL("%s: #tmat (%d) exceeds limit (%d)\n", file_name,
                 t->n_tmat, MAX_INT16);

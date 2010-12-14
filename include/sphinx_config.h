@@ -29,22 +29,25 @@
 /* #undef DEFAULT_RADIX */
 
 /* Use Q15 fixed-point computation */
-/* #undef FIXED16 */
+//#define FIXED16
 
 /* Use fixed-point computation */
-//#define FIXED_POINT
+#define FIXED_POINT
 
 /* The size of `long', as computed by sizeof. */
 #define SIZEOF_LONG 4
 
 /* Define to 1 if the system has the type `long long'. */
-#define HAVE_LONG_LONG 0
+#define HAVE_LONG_LONG 1
 
 /* The size of `long long', as computed by sizeof. */
-#define SIZEOF_LONG_LONG 4
+#define SIZEOF_LONG_LONG 8
 
 /* Enable debugging output */
 /* #undef SPHINX_DEBUG */
+//#define SPHINX_DEBUG
+
+#	define WORDS_BIGENDIAN 1
 
 // use mfs file system
 #include <mfs.h>
