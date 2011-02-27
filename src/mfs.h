@@ -15,10 +15,17 @@
 #include "xilmfs.h"
 
 // for sphinx_data.mfs
+/*
 #define FLASH_BASE_ADDR 0xc4000000
 #define MFS_ORIG_ADDR 0x800000
 #define NUMBLOCKS 37000
 #define MFS_FILE_SIZE 0x12C5AA4
+*/
+// for sphinx_data.mfs
+#define FLASH_BASE_ADDR 0xc4000000
+#define MFS_ORIG_ADDR 0x000000
+#define NUMBLOCKS 41920
+#define MFS_FILE_SIZE 0x1544B00	// 41920 * 532 = 22301440 = 0x1544B00
 
 #ifndef _NO_MFS
 // replace file operation functions in stdio.h

@@ -442,7 +442,7 @@ ngram_search_save_bp(ngram_search_t *ngs, int frame_idx,
             ngs->bp_table = ckd_realloc(ngs->bp_table,
                                         ngs->bp_table_size
                                         * sizeof(*ngs->bp_table));
-            E_INFO("Resized backpointer table to %d entries\n", ngs->bp_table_size);
+            E_INFO("Resized backpointer table to %d entries (bpidx: %d)\n", ngs->bp_table_size, ngs->bpidx);
         }
         if (ngs->bss_head >= ngs->bscore_stack_size
             - bin_mdef_n_ciphone(ps_search_acmod(ngs)->mdef)) {
@@ -450,7 +450,7 @@ ngram_search_save_bp(ngram_search_t *ngs, int frame_idx,
             ngs->bscore_stack = ckd_realloc(ngs->bscore_stack,
                                             ngs->bscore_stack_size
                                             * sizeof(*ngs->bscore_stack));
-            E_INFO("Resized score stack to %d entries\n", ngs->bscore_stack_size);
+            E_INFO("Resized score stack to %d entries (bss_head: %d)\n", ngs->bscore_stack_size, ngs->bss_head);
         }
 
         ngs->word_lat_idx[w] = ngs->bpidx;
@@ -803,6 +803,7 @@ ngram_search_finish(ps_search_t *search)
 
     /* Mark the current utterance as done. */
     ngs->done = TRUE;
+
     return 0;
 }
 

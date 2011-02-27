@@ -294,7 +294,7 @@ ps_reinit(ps_decoder_t *ps, cmd_ln_t *config)
 
     /* Initialize performance timer. */
     ps->perf.name = "decode";
-    //ptmr_init(&ps->perf);
+    ptmr_init(&ps->perf);
 
     return 0;
 }
@@ -641,8 +641,8 @@ ps_start_utt(ps_decoder_t *ps, char const *uttid)
         return -1;
     }
 
-    //ptmr_reset(&ps->perf);
-    //ptmr_start(&ps->perf);
+    ptmr_reset(&ps->perf);
+    ptmr_start(&ps->perf);
 
     if (uttid) {
         ckd_free(ps->uttid);
@@ -710,7 +710,9 @@ ps_start_utt(ps_decoder_t *ps, char const *uttid)
     /* Start auxiliary phone loop search. */
     if (ps->phone_loop)
         ps_search_start(ps->phone_loop);
-
+    // FIXME
+    // update timer
+    ptmr_stop(&ps->perf);
     return ps_search_start(ps->search);
 }
 
@@ -732,8 +734,14 @@ ps_search_forward(ps_decoder_t *ps)
         acmod_advance(ps->acmod);
         ++ps->n_frame;
         ++nfr;
+        // FIXME
+        // update timer regularly
+        if (!(nfr % 500)) {
+        	printf("Timer updated at ps_search_forward\n");
+        	ptmr_stop(&ps->perf);
+        }
     }
-    return nfr;
+
 }
 
 int
@@ -829,13 +837,13 @@ ps_end_utt(ps_decoder_t *ps)
 
     /* Search any remaining frames. */
     if ((rv = ps_search_forward(ps)) < 0) {
-        //ptmr_stop(&ps->perf);
+        ptmr_stop(&ps->perf);
         return rv;
     }
     /* Finish phone loop search. */
     if (ps->phone_loop) {
         if ((rv = ps_search_finish(ps->phone_loop)) < 0) {
-            //ptmr_stop(&ps->perf);
+            ptmr_stop(&ps->perf);
             return rv;
         }
     }
@@ -843,12 +851,16 @@ ps_end_utt(ps_decoder_t *ps)
     for (i = ps->acmod->output_frame - ps->pl_window;
          i < ps->acmod->output_frame; ++i)
         ps_search_step(ps->search, i);
+    // FIXME
+    // update timer
+    printf("Timer stop at pocketsphinx.c line 853\n");
+    ptmr_stop(&ps->perf);
     /* Finish main search. */
     if ((rv = ps_search_finish(ps->search)) < 0) {
-        //ptmr_stop(&ps->perf);
+        ptmr_stop(&ps->perf);
         return rv;
     }
-    //ptmr_stop(&ps->perf);
+    ptmr_stop(&ps->perf);
 
     /* Log a backtrace if requested. */
     if (cmd_ln_boolean_r(ps->config, "-backtrace")) {
@@ -881,11 +893,11 @@ ps_get_hyp(ps_decoder_t *ps, int32 *out_best_score, char const **out_uttid)
 {
     char const *hyp;
 
-    //ptmr_start(&ps->perf);
+    ptmr_start(&ps->perf);
     hyp = ps_search_hyp(ps->search, out_best_score);
     if (out_uttid)
         *out_uttid = ps->uttid;
-    //ptmr_stop(&ps->perf);
+    ptmr_stop(&ps->perf);
     return hyp;
 }
 
@@ -894,11 +906,11 @@ ps_get_prob(ps_decoder_t *ps, char const **out_uttid)
 {
     int32 prob;
 
-    //ptmr_start(&ps->perf);
+    ptmr_start(&ps->perf);
     prob = ps_search_prob(ps->search);
     if (out_uttid)
         *out_uttid = ps->uttid;
-    //ptmr_stop(&ps->perf);
+    ptmr_stop(&ps->perf);
     return prob;
 }
 
@@ -907,9 +919,9 @@ ps_seg_iter(ps_decoder_t *ps, int32 *out_best_score)
 {
     ps_seg_t *itor;
 
-    //ptmr_start(&ps->perf);
+    ptmr_start(&ps->perf);
     itor = ps_search_seg_iter(ps->search, out_best_score);
-    //ptmr_stop(&ps->perf);
+    ptmr_stop(&ps->perf);
     return itor;
 }
 

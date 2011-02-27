@@ -89,7 +89,7 @@ file_exists(const char *path)
     return (tmp != NULL);
 }
 
-int main()
+int main_ps_hello()
 {
 	char *p;
 	int i;
