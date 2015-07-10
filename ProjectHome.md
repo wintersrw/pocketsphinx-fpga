@@ -1,0 +1,1 @@
+This is a port of pocketsphinx on Xilinx FPGA utilizing hardware acceleration.
